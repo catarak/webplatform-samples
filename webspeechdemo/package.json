@@ -1,0 +1,17 @@
+{
+  "name": "mansplain",
+  "version": "1.0.0",
+  "description": "It mansplains stuff to you",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Cassie Tarakajian",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
+    "request": "^2.69.0",
+    "xml2js": "^0.4.16"
+  }
+}
