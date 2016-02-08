@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <title>Mansplain It To Me</title>
+<link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 <style>
   * {
-    font-family: Verdana, Arial, sans-serif;
+    font-family: "Roboto", sans-serif;
   }
   a:link {
     color:#000;
@@ -46,9 +48,6 @@
     color: #777;
     display: none;
   }
-  .right {
-    float: right;
-  }
   .sidebyside {
     display: inline-block;
     width: 45%;
@@ -59,6 +58,8 @@
   #headline {
     font-size: 40px;
     font-weight: 300;
+    font-family: "Passion One";
+    text-transform: uppercase;
   }
   #info {
     font-size: 20px;
@@ -74,18 +75,47 @@
     text-align: left;
     min-height: 150px;
   }
-  #start_button {
-    border: 0;
-    background-color:transparent;
-    padding: 0;
-  }
   .imageWrapper {
     text-align: center;
+    padding: 50px 0;
   }
-  .mansplainImage {
+  @font-face {
+      font-family: 'icomoon';
+      src:    url('fonts/icomoon.eot?uuh60e');
+      src:    url('fonts/icomoon.eot?uuh60e#iefix') format('embedded-opentype'),
+          url('fonts/icomoon.ttf?uuh60e') format('truetype'),
+          url('fonts/icomoon.woff?uuh60e') format('woff'),
+          url('fonts/icomoon.svg?uuh60e#icomoon') format('svg');
+      font-weight: normal;
+      font-style: normal;
+  }
 
+  [class^="icon-"], [class*=" icon-"] {
+      /* use !important to prevent issues with browser extensions that change fonts */
+      font-family: 'icomoon' !important;
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      line-height: 1;
+
+      /* Better Font Rendering =========== */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+  }
+  .icon-wit-mic:before {
+    margin-right: -6px;
+  }
+  .wit-microphone {
+    cursor: pointer;
+  }
+  #info {
+    padding-bottom: 40px;
+    color: black;
   }
 </style>
+<link rel="stylesheet" href="microphone.min.css"> 
 <h1 class="center" id="headline">
   Mansplain It To Me
 </h1>
@@ -93,7 +123,7 @@
   <img class="mansplainImage" src="https://31.media.tumblr.com/86322c31a857aa16a001d5005bf1cfc1/tumblr_inline_ncbtrrflK51t1asjq.gif">
 </div>
 <div id="info">
-  <p id="info_start">Click on the microphone icon and begin speaking.</p>
+  <p id="info_start">What would you like mansplained to you?</p>
   <p id="info_speak_now">Speak now.</p>
   <p id="info_no_speech">No speech was detected. You may need to adjust your
     <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
@@ -110,11 +140,8 @@
      Upgrade to <a href="//www.google.com/chrome">Chrome</a>
      version 25 or later.</p>
 </div>
-<div class="right">
-  <button id="start_button" onclick="startButton(event)">
-    <img id="start_img" src="mic.gif" alt="Start"></button>
-</div>
-<div id="results">
+<center><div id="microphone"></div></center>
+<div id="results" style="display: none;">
   <span id="final_span" class="final"></span>
   <span id="interim_span" class="interim"></span>
   <p>
@@ -142,7 +169,9 @@
     <select id="select_dialect"></select>
   </div>
 </div>
+<script src="microphone.min.js"></script>
 <script>
+var mic = new Wit.Microphone(document.getElementById("microphone"));
 var langs =
 [['Afrikaans',       ['af-ZA']],
  ['Bahasa Indonesia',['id-ID']],
@@ -246,7 +275,7 @@ var start_timestamp;
 if (!('webkitSpeechRecognition' in window)) {
   upgrade();
 } else {
-  start_button.style.display = 'inline-block';
+  // start_button.style.display = 'inline-block';
   var recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;
@@ -254,7 +283,9 @@ if (!('webkitSpeechRecognition' in window)) {
   recognition.onstart = function() {
     recognizing = true;
     showInfo('info_speak_now');
-    start_img.src = 'mic-animate.gif';
+    //here change mic to red
+    // start_img.src = 'mic-animate.gif';
+    $("#microphone").addClass("active");
   };
 
   recognition.onerror = function(event) {
@@ -283,7 +314,9 @@ if (!('webkitSpeechRecognition' in window)) {
     if (ignore_onend) {
       return;
     }
-    start_img.src = 'mic.gif';
+    // start_img.src = 'mic.gif';
+    $("#microphone").removeClass("active");
+    showInfo('info_start');
     if (!final_transcript) {
       showInfo('info_start');
       return;
@@ -336,7 +369,7 @@ if (!('webkitSpeechRecognition' in window)) {
 
 
 function upgrade() {
-  start_button.style.visibility = 'hidden';
+  // start_button.style.visibility = 'hidden';
   showInfo('info_upgrade');
 }
 
@@ -395,7 +428,7 @@ function startButton(event) {
   ignore_onend = false;
   final_span.innerHTML = '';
   interim_span.innerHTML = '';
-  start_img.src = 'mic-slash.gif';
+  //start_img.src = 'mic-slash.gif';
   showInfo('info_allow');
   showButtons('none');
   start_timestamp = event.timeStamp;
@@ -410,7 +443,7 @@ function showInfo(s) {
     }
     info.style.visibility = 'visible';
   } else {
-    info.style.visibility = 'hidden';
+    // info.style.visibility = 'hidden';
   }
 }
 
@@ -432,6 +465,10 @@ function showButtons(style) {
   $(function() {
     $(".mansplainImage").click(function(event) {
       window.speechSynthesis.cancel();
+    });
+
+    $("#microphone").click(function(event) {
+      startButton(event);
     });
   })
 </script>
