@@ -1,10 +1,25 @@
 var express = require('express');
 var request = require('request');
 var app = express();
+var mongoose = require('mongoose');
 
 var parseString = require('xml2js').parseString;
 
+mongoose.connect('mongodb://localhost/mansplain');
+
+var Query = mongoose.model('Query', {text: String});
+
+
 app.get('/api/search', function (req, res) {
+  var query = new Query({text: req.query.text});
+  query.save(function(err, queryObj) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('saved successfully:', queryObj);
+    }
+  });
+  
   request({
   	method: 'GET', 
   	url: "http://api.wolframalpha.com/v2/query",
@@ -25,10 +40,6 @@ app.get('/api/search', function (req, res) {
 		});
   });
 });
-
-// app.get('/', function(req, res) {
-// 	res.render("webspeechdemo.html");
-// });
 
 app.use(express.static(__dirname + '/'));
 
