@@ -2,6 +2,7 @@ var express = require('express');
 var request = require('request');
 var app = express();
 var mongoose = require('mongoose');
+var path = require("path");
 
 var parseString = require('xml2js').parseString;
 
@@ -41,7 +42,15 @@ app.get('/api/search', function (req, res) {
   });
 });
 
-app.use(express.static(__dirname + '/'));
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname+'/index.html'));
+});
+
+app.get('/about', function(req, res) {
+  res.sendFile(path.join(__dirname+'/about.html'));
+});
+
+app.use(express.static(__dirname + '/static'));
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
